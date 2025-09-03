@@ -6,6 +6,7 @@ enum VIEWS {
     CLIENTS = "CLIENTS",
     RUN = "RUN",
     COPILOT = "COPILOT",
+    PREVIEW = "PREVIEW",
     SETTINGS = "SETTINGS",
 }
 

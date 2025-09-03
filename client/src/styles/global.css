@@ -15,10 +15,22 @@ body {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    background-color: black !important;
+    background: black !important;
 
     --sb-track-color: #3d404a;
     --sb-thumb-color: #e1e1ffb3;
     --sb-size: 6px;
+}
+
+html {
+    background-color: black !important;
+    background: black !important;
+}
+
+#root {
+    background-color: black !important;
+    background: black !important;
 }
 
 ::-webkit-scrollbar {
