@@ -1,4 +1,5 @@
-import illustration from "@/assets/illustration.svg"
+import illustration from "@/assets/Adobe Express - file (1).png"
+
 import FormComponent from "@/components/forms/FormComponent"
 // import Footer from "@/components/common/Footer";
 
