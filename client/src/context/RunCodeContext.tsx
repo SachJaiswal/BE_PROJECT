@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast"
 import { useFileSystem } from "./FileContext"
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
 type Language = {
   language: string
   version: string
@@ -86,59 +87,112 @@ export const RunCodeContextProvider = ({
   }
 
   // ✅ Run code (FINAL)
+  // const runCode = async () => {
+  //   try {
+  //     if (!selectedLanguage) return toast.error("Select language")
+  //     if (!activeFile?.content) return toast.error("No code to run")
+
+  //     setIsRunning(true)
+  //     setOutput("")
+  //     toast.loading("Running...")
+
+  //     const response = await axios.post("http://localhost:3000/run", {
+  //       language: selectedLanguage.language,
+  //       version: selectedLanguage.version,
+  //       files: [
+  //         {
+  //           name: getFileName(
+  //             selectedLanguage.language,
+  //             activeFile.name
+  //           ),
+  //           content: activeFile.content,
+  //         },
+  //       ],
+  //       stdin: input || "",
+  //     })
+
+  //     console.log("Backend Response:", response.data)
+
+  //     const result = response.data.run
+
+  //     if (result.stderr) {
+  //       setOutput(result.stderr)
+  //     } else if (result.stdout) {
+  //       setOutput(result.stdout)
+  //     } else {
+  //       setOutput(result.output)
+  //     }
+
+  //     toast.dismiss()
+  //   } catch (error: any) {
+  //     console.error("Execution error:", error)
+
+  //     if (error.response) {
+  //       setOutput(JSON.stringify(error.response.data, null, 2))
+  //     } else {
+  //       setOutput(error.message)
+  //     }
+
+  //     toast.dismiss()
+  //     toast.error("Execution failed")
+  //   } finally {
+  //     setIsRunning(false)
+  //   }
+  // }
+
   const runCode = async () => {
-    try {
-      if (!selectedLanguage) return toast.error("Select language")
-      if (!activeFile?.content) return toast.error("No code to run")
+  try {
+    if (!selectedLanguage) return toast.error("Select language")
+    if (!activeFile?.content) return toast.error("No code to run")
 
-      setIsRunning(true)
-      setOutput("")
-      toast.loading("Running...")
+    setIsRunning(true)
+    setOutput("")
+    toast.loading("Running...")
 
-      const response = await axios.post("http://localhost:3000/run", {
-        language: selectedLanguage.language,
-        version: selectedLanguage.version,
-        files: [
-          {
-            name: getFileName(
-              selectedLanguage.language,
-              activeFile.name
-            ),
-            content: activeFile.content,
-          },
-        ],
-        stdin: input || "",
-      })
+    // ✅ FIXED: Use BACKEND_URL instead of hardcoded localhost
+    const response = await axios.post(`${BACKEND_URL}/run`, {
+      language: selectedLanguage.language,
+      version: selectedLanguage.version,
+      files: [
+        {
+          name: getFileName(
+            selectedLanguage.language,
+            activeFile.name
+          ),
+          content: activeFile.content,
+        },
+      ],
+      stdin: input || "",
+    })
 
-      console.log("Backend Response:", response.data)
+    console.log("Backend Response:", response.data)
 
-      const result = response.data.run
+    const result = response.data.run
 
-      if (result.stderr) {
-        setOutput(result.stderr)
-      } else if (result.stdout) {
-        setOutput(result.stdout)
-      } else {
-        setOutput(result.output)
-      }
-
-      toast.dismiss()
-    } catch (error: any) {
-      console.error("Execution error:", error)
-
-      if (error.response) {
-        setOutput(JSON.stringify(error.response.data, null, 2))
-      } else {
-        setOutput(error.message)
-      }
-
-      toast.dismiss()
-      toast.error("Execution failed")
-    } finally {
-      setIsRunning(false)
+    if (result.stderr) {
+      setOutput(result.stderr)
+    } else if (result.stdout) {
+      setOutput(result.stdout)
+    } else {
+      setOutput(result.output)
     }
-  }
 
+    toast.dismiss()
+  } catch (error: any) {
+    console.error("Execution error:", error)
+
+    if (error.response) {
+      setOutput(JSON.stringify(error.response.data, null, 2))
+    } else {
+      setOutput(error.message)
+    }
+
+    toast.dismiss()
+    toast.error("Execution failed")
+  } finally {
+    setIsRunning(false)
+  }
+}
   return (
     <RunCodeContext.Provider
       value={{
