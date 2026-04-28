@@ -1,12 +1,22 @@
-import axios, { AxiosInstance } from "axios"
+// import axios, { AxiosInstance } from "axios"
 
-const pistonBaseUrl = "https://emkc.org/api/v2/piston"
+// const pistonBaseUrl = "https://emkc.org/api/v2/piston"
 
-const instance: AxiosInstance = axios.create({
-    baseURL: pistonBaseUrl,
-    headers: {
-        "Content-Type": "application/json",
-    },
-})
+// const instance: AxiosInstance = axios.create({
+//     baseURL: pistonBaseUrl,
+//     headers: {
+//         "Content-Type": "application/json",
+//     },
+// })
 
-export default instance
+// export default instance
+import axios from "axios";
+
+const pistonApi = axios.create({
+  baseURL: "https://emkc.org/api/v2/piston",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export default pistonApi;

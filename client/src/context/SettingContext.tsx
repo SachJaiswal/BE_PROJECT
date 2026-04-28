@@ -13,6 +13,7 @@ import {
 
 const SettingContext = createContext<SettingsContextType | null>(null)
 
+
 export const useSettings = (): SettingsContextType => {
     const context = useContext(SettingContext)
     if (!context) {

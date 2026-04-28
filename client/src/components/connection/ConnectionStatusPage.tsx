@@ -7,7 +7,6 @@ function ConnectionStatusPage() {
         </div>
     )
 }
-
 const ConnectionError = () => {
     const navigate = useNavigate()
     const reloadPage = () => {
@@ -17,7 +16,6 @@ const ConnectionError = () => {
     const gotoHomePage = () => {
         navigate("/")
     }
-
     return (
         <>
             <span className="whitespace-break-spaces text-lg font-medium text-slate-300">
@@ -40,5 +38,4 @@ const ConnectionError = () => {
         </>
     )
 }
-
 export default ConnectionStatusPage

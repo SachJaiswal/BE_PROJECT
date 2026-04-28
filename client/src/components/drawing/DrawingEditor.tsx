@@ -19,11 +19,18 @@ function DrawingEditor() {
         </Tldraw>
     )
 }
-
 function ReachEditor() {
     const editor = useEditor()
-    const { drawingData, setDrawingData } = useAppContext()
+    const { drawingData, setDrawingData, currentUser } = useAppContext()
     const { socket } = useSocket()
+
+    useEffect(() => {
+        if (currentUser.username) {
+            editor.user.updateUserPreferences({
+                name: currentUser.username,
+            })
+        }
+    }, [editor, currentUser.username])
 
     const handleChangeEvent = useCallback(
         (change: HistoryEntry<TLRecord>) => {
@@ -34,6 +41,15 @@ function ReachEditor() {
             socket.emit(SocketEvent.DRAWING_UPDATE, { snapshot })
         },
         [editor.store, setDrawingData, socket],
+    )
+
+    const handlePresenceEvent = useCallback(
+        (change: HistoryEntry<TLRecord>) => {
+            const snapshot = change.changes
+            // Emit the snapshot to the server
+            socket.emit(SocketEvent.DRAWING_UPDATE, { snapshot })
+        },
+        [socket],
     )
 
     // Handle drawing updates from other clients
@@ -70,18 +86,24 @@ function ReachEditor() {
             source: "user",
             scope: "document",
         })
+        const cleanupPresence = editor.store.listen(handlePresenceEvent, {
+            source: "user",
+            scope: "presence",
+        })
         // Listen for drawing updates from other clients
         socket.on(SocketEvent.DRAWING_UPDATE, handleRemoteDrawing)
 
         // Cleanup
         return () => {
             cleanupFunction()
+            cleanupPresence()
             socket.off(SocketEvent.DRAWING_UPDATE)
         }
     }, [
         drawingData,
         editor.store,
         handleChangeEvent,
+        handlePresenceEvent,
         handleRemoteDrawing,
         socket,
     ])

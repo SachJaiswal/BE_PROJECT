@@ -3,4 +3,5 @@ export interface ICopilotContext {
     output: string
     isRunning: boolean
     generateCode: () => void
+    clearOutput?: () => void // Optional utility function
 }
